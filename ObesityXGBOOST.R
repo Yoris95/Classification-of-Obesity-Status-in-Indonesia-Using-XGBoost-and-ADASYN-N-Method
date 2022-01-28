@@ -1,7 +1,6 @@
 #Set directory
-setwd("E:/Yoris/Data seminar Yoris Rombe/Data Ibu Tuti/obese300")
-setwd("E:/Yoris/Data seminar Yoris Rombe/Data Ibu Tuti/datafix")
-set.seed(1234)
+setwd("E:/Yoris/obese300")
+
 
 #Load packages
 library(readxl)
@@ -20,7 +19,7 @@ library(Matrix)
 library(magrittr)
 
 #Import the data
-data <- read.csv("datanew.csv")
+data <- read.csv("datanew.csv") #imbalanced data
 
 data <- read.csv("obese300.csv") [,2:23] #balanced data
 
@@ -35,33 +34,16 @@ for (i in 1:dim(test)[2]) {
   test[,i] <- as.factor(test[,i])
 }
 
-for (i in 1:dim(data)[2]) {
-  data[,i] <- as.factor(data[,i])
-}
 
-o = table(data$x1, data$status_obesitas)
-addmargins(o)
-table(train$x1, train$status_obesitas)
-
-data = table(train$X1)
-data1 = round(data/sum(data)*100)
-data1 = paste(names(data1), data1)
-paste(data1, "%", sep = "")
-
-
-#Dataset Plot
+#Data distribution plot
 ggplot(train, aes(x2, ..count..)) + geom_bar(aes(fill = status_obesitas), position = "dodge")
 
-ggplot(data, aes(x1, ..count..)) + geom_bar(aes(fill = status_obesitas), position = "dodge")
-
 #Transform to spare matrix
-
 train.x <- model.matrix(status_obesitas~., data = train)[,-1]
 train.y <- train[,22] == 2
 test.x <- model.matrix(status_obesitas~., data = test)[,-1]
 
 #state parameters
-
 parameters <- list (eta = 0.1,
                     gamma = 0,
                     max_depth = 4,
@@ -75,7 +57,6 @@ parameters <- list (eta = 0.1,
                     booster = "gbtree")
 
 #run xgboost
-
 model <- xgboost(data = train.x,
                  label = train.y,
                  nround = 50,
@@ -84,7 +65,6 @@ model <- xgboost(data = train.x,
                  verbose = 1)
 
 #XGBOOST Tree plot
-
 plotxgb <- xgb.plot.tree(model = model, trees = 1)
 
 #Training Error Plot
@@ -98,9 +78,6 @@ k <- ggplot () +
   labs(x = "Iteration", y = "LogLoss", 
        title = paste("Train logloss plot ")) + ylim(0.4,0.7) 
 
-#evaluate model train
-probt <- predict(model, newdata = train.x)
-
 #evaluate model testing
 prob <- predict(model, newdata = test.x)
 
@@ -108,11 +85,6 @@ prob <- predict(model, newdata = test.x)
 pred <- ifelse(prob > 0.5, 2, 1)
 pred <- as.factor(pred)
 levels(pred) <- c(levels(pred))
-
-#Confusion Matrix train data
-cfmXGB <- confusionMatrix(pred, train$status_obesitas, positive = "2")
-AUC <- auc(roc(train$status_obesitas,probt))
-
 
 #Confusion Matrix
 cfmXGB <- confusionMatrix(pred, test$status_obesitas, positive = "2")
@@ -162,51 +134,8 @@ colnames(metricX) <- names(metric)
 
 write.csv(metricX,"hasil.csv")
 
-#view variable importance plot
-b <- colnames(train.x)
-b[b=="X1Perempuan"] <- "Jenis Kelamin"
-b[b=="X255 - 74 Tahun"] <- "Umur 55 - 74 Tahun"
-b[b=="X235 - 54 Tahun"] <- "Umur 35 - 54 Tahun"
-b[b=="X275 - 94 Tahun"] <- "Umur 75 - 94 Tahun"
-b[b=="X3Ya"] <- "Merokok"
-b[b=="X4Ya"] <- "Aktifitas Berat"
-b[b=="X5Ya"] <- "Aktifitas Sedang"
-b[b=="X62 Hari"] <- "Makan Buah 2 Hari"
-b[b=="X63 Hari"] <- "Makan Buah 3 Hari"
-b[b=="X64 Hari"] <- "Makan Buah 4 Hari"
-b[b=="X65 Hari"] <- "Makan Buah 5 Hari"
-b[b=="X66 Hari"] <- "Makan Buah 6 Hari"
-b[b=="X67 Hari"] <- "Makan Buah 7 Hari"
-b[b=="X6Tidak Pernah"] <- "Tidak Pernah Makan Buah"
-b[b=="X72 Hari"] <- "Makan Sayur 2 Hari"
-b[b=="X73 Hari"] <- "Makan Sayur 3 Hari"
-b[b=="X74 Hari"] <- "Makan Sayur 4 Hari"
-b[b=="X75 Hari"] <- "Makan Sayur 5 Hari"
-b[b=="X76 Hari"] <- "Makan Sayur 6 Hari"
-b[b=="X77 Hari"] <- "Makan Sayur 7 Hari"
-b[b=="X7Tidak Pernah"] <- "Tidak Pernah Makan Sayur"
-b[b=="X8> 1 kali per hari"] <- "Makan Manis lebih dari sekali per Hari"
-b[b=="X81 - 2 kali per minggu"] <- "Makan Manis 1 - 2 per Minggu"
-b[b=="X81 kali per hari"] <- "Makan Manis sekali per Hari"
-b[b=="X83 - 6 kali per minggu"] <- "Makan Manis 3 - 6 kali per Minggu"
-b[b=="X8Tidak pernah"] <- "Tidak Pernah Makan Manis"
-b[b=="X9> 1 kali per hari"] <- "Makan Asin lebih dari sekali per Hari"
-b[b=="X91 - 2 kali per minggu"] <- "Makan Asin 1 - 2 kali per Minggu"
-b[b=="X91 kali per hari"] <- "Makan Asin sekali per Hari"
-b[b=="X93 - 6 kali per minggu"] <- "Makan Asin 3 - 6 per Minggu"
-b[b=="X9Tidak pernah"] <- "Tidak Pernah Makan Asin"
-b[b=="X10> 1 kali per hari"] <- "Makan Berlemak lebih dari sekali per Hari"
-b[b=="X101 - 2 kali per minggu"] <- "Makan Berlemak 1 - 2 per Minggu"
-b[b=="X101 kali per hari"] <- "Makan Berlemak sekali per Hari"
-b[b=="X103 - 6 kali per minggu"] <- "Makan Berlemak 3 - 6 per Minggu"
-b[b=="X10Tidak pernah"] <- "Tidak Pernah Makan Berlemak"
-b[b=="X11Tidak Stres"] <- "Stress"
-
-#fitur <- xgb.importance (feature_name = b, model=model)
-
+#Feature Importance
 fitur <- xgb.importance (model=model)
-
-xgb.model.dt.tree(model = model)
 
 RX <- xgb.ggplot.importance (importance_matrix = fitur[1:10])
 ggsave(plot = RX, filename = "Feature Importance.jpg")
