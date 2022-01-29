@@ -18,7 +18,7 @@ The data used in this study is secondary data, namely Indonesian obesity data ob
 6. Feature Importance
 - Ranking the features by using the best model obtained after comparing the XGBoost with ADASYN-N model and the XGBoost without ADASYN-N model.
 
-#Result
+# Result
 
 ![Model Comparison](https://user-images.githubusercontent.com/98592375/151652483-feeb7dd5-ea79-48d8-8067-63b11b473f6c.JPG)
 
