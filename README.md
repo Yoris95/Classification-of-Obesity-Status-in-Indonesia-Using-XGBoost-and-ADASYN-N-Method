@@ -15,6 +15,8 @@ The data used in this study is secondary data, namely Indonesian obesity data ob
 -  Using XGBoost to build model.
 5. Model Performance Evaluation
 -  Evaluating the model built by calculating the values of accuracy, sensitivity, specifications, and AUC.
+6. Feature Importance
+- Ranking the features based on gain Value.
 
 #Result
-![Model comparison](
+![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
