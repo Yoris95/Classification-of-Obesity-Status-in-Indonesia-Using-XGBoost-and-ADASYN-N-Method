@@ -16,7 +16,15 @@ The data used in this study is secondary data, namely Indonesian obesity data ob
 5. Model Performance Evaluation
 -  Evaluating the model built by calculating the values of accuracy, sensitivity, specifications, and AUC.
 6. Feature Importance
-- Ranking the features based on gain Value.
+- Ranking the features by using the best model obtained after comparing the XGBoost with ADASYN model and the XGBoost without ADASYN model.
 
 #Result
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+
+![Model Comparison](https://user-images.githubusercontent.com/98592375/151652002-9d766f5f-89dd-4cf8-809d-e47109d08213.JPG)
+
+Based on the image above, the best model obtained is XGBoost with ADASYN. We then conduct the feature importance based on the best model obtained.
+
+![Feature Importance](https://user-images.githubusercontent.com/98592375/151652068-87776522-306f-4c12-8789-b6acd1b5f335.JPG)
+
+Based on the XGBoost model with ADASYN-N, the most important factor influencing obesity status based on the 2013 Basic Health Research data is gender (female) factor, meaning that gender (X1) can reduce the highest heterogeneity. Other influencing factors are age 35-54 years (X2), strenuous activity (X4), and eating vegetables for 6 days (X7).
+
