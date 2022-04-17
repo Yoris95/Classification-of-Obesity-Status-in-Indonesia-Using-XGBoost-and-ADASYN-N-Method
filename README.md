@@ -28,3 +28,6 @@ Based on the image above, the best model obtained is XGBoost with ADASYN. We the
 
 Based on the XGBoost model with ADASYN-N, the most important factor influencing obesity status based on the 2013 Basic Health Research data is gender (female) factor, meaning that gender (X1) can reduce the highest heterogeneity. Other influencing factors are age 35-54 years (X2), strenuous activity (X4), and eating vegetables for 6 days (X7).
 
+# *Author*
+* Yoris Rombe (yoris.rombe.95@gmail.com)
+  - [LinkedIn](www.linkedin.com/in/yoris-rombe-327115146)
